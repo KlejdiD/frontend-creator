@@ -1,0 +1,90 @@
+/* client/src/components/IssueCard.css */
+.issue-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  background: white;
+  overflow: hidden;
+}
+
+.issue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.issue-header:hover {
+  background: #f8fafc;
+}
+
+.issue-header h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.issue-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.issue-count {
+  background: #ef4444;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.issue-content {
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+}
+
+.issues-list h5,
+.suggestions-list h5 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #374151;
+}
+
+.issues-list ul,
+.suggestions-list ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.issue-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.issue-item:before {
+  content: "⚠️";
+  flex-shrink: 0;
+}
+
+.suggestion-item {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+}
+
+.suggestion-item:before {
+  content: "💡";
+  margin-right: 0.5rem;
+}
+
+.fix-btn {
+  margin-top: 0.5rem;
+}

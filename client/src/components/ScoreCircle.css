@@ -1,0 +1,18 @@
+/* client/src/components/ScoreCircle.css */
+.score-circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-progress {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.score-text {
+  position: absolute;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
