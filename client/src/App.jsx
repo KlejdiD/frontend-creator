@@ -40,6 +40,115 @@ const App = () => {
     }
   };
 
+  // Generate diff highlighting
+  const generateDiffHighlighting = (originalCode, modifiedCode) => {
+    const originalLines = originalCode.split('\n');
+    const modifiedLines = modifiedCode.split('\n');
+    
+    const diffResult = [];
+    let originalIndex = 0;
+    let modifiedIndex = 0;
+    
+    while (originalIndex < originalLines.length || modifiedIndex < modifiedLines.length) {
+      const originalLine = originalLines[originalIndex] || '';
+      const modifiedLine = modifiedLines[modifiedIndex] || '';
+      
+      if (originalIndex >= originalLines.length) {
+        // Only modified lines remaining (additions)
+        diffResult.push({
+          type: 'added',
+          line: modifiedLine,
+          lineNumber: modifiedIndex + 1
+        });
+        modifiedIndex++;
+      } else if (modifiedIndex >= modifiedLines.length) {
+        // Only original lines remaining (deletions)
+        diffResult.push({
+          type: 'removed',
+          line: originalLine,
+          lineNumber: originalIndex + 1
+        });
+        originalIndex++;
+      } else if (originalLine.trim() === modifiedLine.trim()) {
+        // Lines are the same
+        diffResult.push({
+          type: 'unchanged',
+          line: modifiedLine,
+          lineNumber: modifiedIndex + 1
+        });
+        originalIndex++;
+        modifiedIndex++;
+      } else {
+        // Lines are different
+        const nextOriginalLine = originalLines[originalIndex + 1] || '';
+        const nextModifiedLine = modifiedLines[modifiedIndex + 1] || '';
+        
+        if (nextOriginalLine.trim() === modifiedLine.trim()) {
+          // Current original line was deleted
+          diffResult.push({
+            type: 'removed',
+            line: originalLine,
+            lineNumber: originalIndex + 1
+          });
+          originalIndex++;
+        } else if (originalLine.trim() === nextModifiedLine.trim()) {
+          // Current modified line was added
+          diffResult.push({
+            type: 'added',
+            line: modifiedLine,
+            lineNumber: modifiedIndex + 1
+          });
+          modifiedIndex++;
+        } else {
+          // Lines were modified
+          diffResult.push({
+            type: 'removed',
+            line: originalLine,
+            lineNumber: originalIndex + 1
+          });
+          diffResult.push({
+            type: 'added',
+            line: modifiedLine,
+            lineNumber: modifiedIndex + 1
+          });
+          originalIndex++;
+          modifiedIndex++;
+        }
+      }
+    }
+    
+    return diffResult;
+  };
+
+  const createHighlightedCode = (diffResult) => {
+    return diffResult.map((diff, index) => {
+      let className = 'code-line';
+      let prefix = '  ';
+      
+      switch (diff.type) {
+        case 'added':
+          className += ' diff-added';
+          prefix = '+ ';
+          break;
+        case 'removed':
+          className += ' diff-removed';
+          prefix = '- ';
+          break;
+        case 'unchanged':
+          className += ' diff-unchanged';
+          prefix = '  ';
+          break;
+      }
+      
+      return {
+        ...diff,
+        className,
+        prefix,
+        key: `diff-${index}`
+      };
+    });
+  };
+
   // Apply improvements based on analysis results
   const applyAnalysisBasedImprovements = (originalCode, issues, codeType) => {
     let improvedCode = originalCode;
@@ -275,6 +384,10 @@ const App = () => {
         console.log('✅ Using top-level code property');
       }
       
+      // Generate diff highlighting
+      let diffData = null;
+      let hasChanges = actualFixedCode !== code;
+      
       // If AI returned identical code, apply analysis-based improvements
       if (actualFixedCode === code) {
         console.log('🤖 AI returned identical code - applying analysis-based improvements...');
@@ -288,6 +401,7 @@ const App = () => {
           
           if (improvedCode !== actualFixedCode && appliedFixes.length > 0) {
             actualFixedCode = improvedCode;
+            hasChanges = true;
             console.log('✅ Applied analysis-based improvements:', appliedFixes);
             toast.success(`Applied ${appliedFixes.length} AI-recommended improvements!`);
           } else {
@@ -302,8 +416,37 @@ const App = () => {
         toast.success('AI successfully generated improved code!');
       }
       
+      // Generate diff highlighting if there are changes
+      if (hasChanges) {
+        const diffResult = generateDiffHighlighting(code, actualFixedCode);
+        const highlightedCode = createHighlightedCode(diffResult);
+        
+        diffData = {
+          original: code,
+          modified: actualFixedCode,
+          diff: highlightedCode,
+          stats: {
+            additions: highlightedCode.filter(line => line.type === 'added').length,
+            deletions: highlightedCode.filter(line => line.type === 'removed').length,
+            modifications: highlightedCode.filter(line => line.type === 'added' || line.type === 'removed').length
+          }
+        };
+        
+        console.log('📊 Diff stats:', diffData.stats);
+      }
+      
       console.log('🎯 Final code length:', actualFixedCode.length);
-      setFixedCode(actualFixedCode);
+      
+      // Store code and diff data for the CodeEditor component
+      if (diffData) {
+        setFixedCode({
+          code: actualFixedCode,
+          diffData: diffData
+        });
+      } else {
+        setFixedCode(actualFixedCode);
+      }
+      
       setShowFixedCode(true);
       
     } catch (error) {

@@ -14,7 +14,433 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f8fafc;
 }
+/* Add this to your App.css or create a new DiffHighlight.css file */
 
+/* Diff highlighting styles */
+.diff-container {
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.diff-header {
+  background: #2d2d2d;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diff-title {
+  color: #fff;
+  font-weight: 600;
+  margin: 0;
+  font-size: 14px;
+}
+
+.diff-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.diff-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.diff-stat.additions {
+  color: #28a745;
+}
+
+.diff-stat.deletions {
+  color: #dc3545;
+}
+
+.diff-stat-icon {
+  font-weight: bold;
+}
+
+.diff-content {
+  max-height: 500px;
+  overflow-y: auto;
+  background: #1e1e1e;
+}
+
+.code-line {
+  padding: 2px 16px;
+  margin: 0;
+  white-space: pre;
+  font-family: inherit;
+  border-left: 3px solid transparent;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.code-line:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Added lines (green) */
+.diff-added {
+  background: rgba(40, 167, 69, 0.15);
+  border-left-color: #28a745;
+  color: #28a745;
+}
+
+.diff-added::before {
+  content: "+";
+  position: absolute;
+  left: 4px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Removed lines (red) */
+.diff-removed {
+  background: rgba(220, 53, 69, 0.15);
+  border-left-color: #dc3545;
+  color: #dc3545;
+  text-decoration: line-through;
+}
+
+.diff-removed::before {
+  content: "-";
+  position: absolute;
+  left: 4px;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Unchanged lines */
+.diff-unchanged {
+  color: #d4d4d4;
+}
+
+.diff-unchanged::before {
+  content: " ";
+  position: absolute;
+  left: 4px;
+}
+
+/* Line numbers */
+.with-line-numbers .code-line {
+  padding-left: 60px;
+}
+
+.line-number {
+  position: absolute;
+  left: 20px;
+  width: 30px;
+  text-align: right;
+  color: #666;
+  font-size: 11px;
+  user-select: none;
+}
+
+/* Syntax highlighting integration */
+.diff-added .token.keyword {
+  color: #5cb85c;
+}
+.diff-added .token.string {
+  color: #7ec699;
+}
+.diff-added .token.function {
+  color: #81c784;
+}
+
+.diff-removed .token.keyword {
+  color: #d9534f;
+}
+.diff-removed .token.string {
+  color: #e57373;
+}
+.diff-removed .token.function {
+  color: #ef5350;
+}
+
+/* Compact mode */
+.diff-compact .code-line {
+  padding: 1px 16px;
+  font-size: 12px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .diff-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .diff-stats {
+    gap: 12px;
+  }
+
+  .code-line {
+    padding-left: 40px;
+    font-size: 12px;
+  }
+
+  .line-number {
+    left: 12px;
+    width: 24px;
+  }
+}
+
+/* Toggle button for diff view */
+.diff-toggle {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.diff-toggle:hover {
+  background: #357abd;
+}
+
+.diff-toggle.active {
+  background: #28a745;
+}
+
+/* Highlight animation for new changes */
+@keyframes highlightChange {
+  0% {
+    background: rgba(74, 144, 226, 0.3);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.diff-added.new-change,
+.diff-removed.new-change {
+  animation: highlightChange 2s ease-out;
+} /* Add this to your App.css or create a new DiffHighlight.css file */
+
+/* Diff highlighting styles */
+.diff-container {
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.diff-header {
+  background: #2d2d2d;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.diff-title {
+  color: #fff;
+  font-weight: 600;
+  margin: 0;
+  font-size: 14px;
+}
+
+.diff-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.diff-stat {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.diff-stat.additions {
+  color: #28a745;
+}
+
+.diff-stat.deletions {
+  color: #dc3545;
+}
+
+.diff-stat-icon {
+  font-weight: bold;
+}
+
+.diff-content {
+  max-height: 500px;
+  overflow-y: auto;
+  background: #1e1e1e;
+}
+
+.code-line {
+  padding: 2px 16px;
+  margin: 0;
+  white-space: pre;
+  font-family: inherit;
+  border-left: 3px solid transparent;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.code-line:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Added lines (green) */
+.diff-added {
+  background: rgba(40, 167, 69, 0.15);
+  border-left-color: #28a745;
+  color: #28a745;
+}
+
+.diff-added::before {
+  content: "+";
+  position: absolute;
+  left: 4px;
+  color: #28a745;
+  font-weight: bold;
+}
+
+/* Removed lines (red) */
+.diff-removed {
+  background: rgba(220, 53, 69, 0.15);
+  border-left-color: #dc3545;
+  color: #dc3545;
+  text-decoration: line-through;
+}
+
+.diff-removed::before {
+  content: "-";
+  position: absolute;
+  left: 4px;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Unchanged lines */
+.diff-unchanged {
+  color: #d4d4d4;
+}
+
+.diff-unchanged::before {
+  content: " ";
+  position: absolute;
+  left: 4px;
+}
+
+/* Line numbers */
+.with-line-numbers .code-line {
+  padding-left: 60px;
+}
+
+.line-number {
+  position: absolute;
+  left: 20px;
+  width: 30px;
+  text-align: right;
+  color: #666;
+  font-size: 11px;
+  user-select: none;
+}
+
+/* Syntax highlighting integration */
+.diff-added .token.keyword {
+  color: #5cb85c;
+}
+.diff-added .token.string {
+  color: #7ec699;
+}
+.diff-added .token.function {
+  color: #81c784;
+}
+
+.diff-removed .token.keyword {
+  color: #d9534f;
+}
+.diff-removed .token.string {
+  color: #e57373;
+}
+.diff-removed .token.function {
+  color: #ef5350;
+}
+
+/* Compact mode */
+.diff-compact .code-line {
+  padding: 1px 16px;
+  font-size: 12px;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .diff-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .diff-stats {
+    gap: 12px;
+  }
+
+  .code-line {
+    padding-left: 40px;
+    font-size: 12px;
+  }
+
+  .line-number {
+    left: 12px;
+    width: 24px;
+  }
+}
+
+/* Toggle button for diff view */
+.diff-toggle {
+  background: #4a90e2;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.diff-toggle:hover {
+  background: #357abd;
+}
+
+.diff-toggle.active {
+  background: #28a745;
+}
+
+/* Highlight animation for new changes */
+@keyframes highlightChange {
+  0% {
+    background: rgba(74, 144, 226, 0.3);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.diff-added.new-change,
+.diff-removed.new-change {
+  animation: highlightChange 2s ease-out;
+}
 .app {
   display: flex;
   flex-direction: column;
